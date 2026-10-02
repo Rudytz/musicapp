@@ -1,0 +1,1228 @@
+
+/* =========================================================
+   BASSLINE — ULTRA SMOOTH MUSIC UI
+   Works with your existing index.html
+   ========================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --bg: #07070a;
+  --bg-2: #0d0d12;
+  --panel: rgba(20, 20, 28, 0.72);
+  --panel-hover: rgba(31, 31, 42, 0.86);
+
+  --text: #f7f7fb;
+  --muted: #92929f;
+
+  --accent: #9b5cff;
+  --accent-2: #d66cff;
+  --accent-3: #6c4dff;
+
+  --border: rgba(255, 255, 255, 0.08);
+
+  --shadow:
+    0 20px 70px rgba(0, 0, 0, 0.45),
+    0 0 50px rgba(155, 92, 255, 0.06);
+
+  --radius: 22px;
+}
+
+/* =========================================================
+   RESET
+   ========================================================= */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  font-family: "Inter", Arial, sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(
+      circle at 15% 10%,
+      rgba(155, 92, 255, 0.13),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 85% 20%,
+      rgba(214, 108, 255, 0.09),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 50% 100%,
+      rgba(108, 77, 255, 0.08),
+      transparent 35%
+    ),
+    var(--bg);
+
+  overflow-x: hidden;
+}
+
+/* Animated background glow */
+
+body::before {
+  content: "";
+  position: fixed;
+  width: 600px;
+  height: 600px;
+  left: -250px;
+  top: 20%;
+  border-radius: 50%;
+  background: rgba(155, 92, 255, 0.07);
+  filter: blur(100px);
+  pointer-events: none;
+  animation: ambientFloat 12s ease-in-out infinite alternate;
+  z-index: -1;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  width: 500px;
+  height: 500px;
+  right: -200px;
+  bottom: 10%;
+  border-radius: 50%;
+  background: rgba(214, 108, 255, 0.06);
+  filter: blur(110px);
+  pointer-events: none;
+  animation: ambientFloat2 15s ease-in-out infinite alternate;
+  z-index: -1;
+}
+
+@keyframes ambientFloat {
+  from {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  to {
+    transform: translate3d(80px, -50px, 0) scale(1.15);
+  }
+}
+
+@keyframes ambientFloat2 {
+  from {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  to {
+    transform: translate3d(-70px, 50px, 0) scale(1.12);
+  }
+}
+
+/* =========================================================
+   NAVIGATION
+   ========================================================= */
+
+#nav {
+  position: sticky;
+  top: 18px;
+  z-index: 100;
+
+  width: calc(100% - 40px);
+  max-width: 1250px;
+  margin: 18px auto 35px;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 12px 14px;
+
+  background: rgba(12, 12, 17, 0.72);
+  backdrop-filter: blur(25px) saturate(150%);
+  -webkit-backdrop-filter: blur(25px) saturate(150%);
+
+  border: 1px solid var(--border);
+  border-radius: 24px;
+
+  box-shadow:
+    0 15px 60px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+
+  animation: navEnter 0.7s cubic-bezier(.16, 1, .3, 1);
+}
+
+@keyframes navEnter {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Logo */
+
+#nav h1 {
+  position: relative;
+
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -1px;
+
+  margin: 0 18px 0 8px;
+
+  background: linear-gradient(
+    120deg,
+    #fff,
+    #cba8ff,
+    #9b5cff
+  );
+
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+#nav h1::after {
+  content: "";
+  position: absolute;
+
+  width: 6px;
+  height: 6px;
+
+  right: -10px;
+  bottom: 4px;
+
+  border-radius: 50%;
+  background: var(--accent);
+
+  box-shadow:
+    0 0 10px var(--accent),
+    0 0 20px var(--accent);
+}
+
+/* Nav buttons */
+
+#nav button {
+  position: relative;
+
+  border: 0;
+  outline: none;
+
+  color: #9c9ca8;
+  background: transparent;
+
+  padding: 11px 15px;
+
+  border-radius: 13px;
+
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    color 0.25s ease,
+    background 0.3s ease,
+    transform 0.3s cubic-bezier(.16, 1, .3, 1);
+}
+
+#nav button::before {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+
+  border-radius: inherit;
+
+  background: linear-gradient(
+    135deg,
+    rgba(155, 92, 255, 0.18),
+    rgba(214, 108, 255, 0.08)
+  );
+
+  opacity: 0;
+
+  transform: scale(0.85);
+
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
+}
+
+#nav button:hover {
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+#nav button:hover::before {
+  opacity: 1;
+  transform: scale(1);
+}
+
+#nav button.on {
+  color: white;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(155, 92, 255, 0.23),
+      rgba(214, 108, 255, 0.1)
+    );
+
+  box-shadow:
+    inset 0 0 0 1px rgba(155, 92, 255, 0.15),
+    0 5px 25px rgba(155, 92, 255, 0.12);
+}
+
+/* =========================================================
+   MAIN
+   ========================================================= */
+
+main {
+  width: calc(100% - 40px);
+  max-width: 1150px;
+
+  margin: 0 auto;
+
+  padding-bottom: 150px;
+}
+
+/* =========================================================
+   VIEWS
+   ========================================================= */
+
+.view {
+  display: none;
+
+  animation: viewIn 0.5s cubic-bezier(.16, 1, .3, 1);
+}
+
+.view.on {
+  display: block;
+}
+
+@keyframes viewIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px) scale(0.985);
+    filter: blur(5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+/* Section headings */
+
+.view h2 {
+  margin-bottom: 25px;
+
+  font-size: clamp(28px, 4vw, 42px);
+  font-weight: 800;
+
+  letter-spacing: -1.8px;
+
+  background:
+    linear-gradient(
+      120deg,
+      #fff 15%,
+      #cfc4e8 50%,
+      #a76aff 100%
+    );
+
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.view > p {
+  color: var(--muted);
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+/* =========================================================
+   SONG LIST
+   ========================================================= */
+
+.songs {
+  list-style: none;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* This styles dynamically created song items */
+
+.songs li {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+
+  min-height: 68px;
+
+  padding: 12px 15px;
+
+  border-radius: 17px;
+
+  border: 1px solid rgba(255, 255, 255, 0.055);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.045),
+      rgba(255, 255, 255, 0.018)
+    );
+
+  backdrop-filter: blur(14px);
+
+  box-shadow:
+    0 8px 30px rgba(0, 0, 0, 0.15);
+
+  transition:
+    transform 0.35s cubic-bezier(.16, 1, .3, 1),
+    background 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.35s ease;
+}
+
+.songs li:hover {
+  transform: translateX(5px) translateY(-2px);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(155, 92, 255, 0.1),
+      rgba(255, 255, 255, 0.04)
+    );
+
+  border-color: rgba(155, 92, 255, 0.22);
+
+  box-shadow:
+    0 15px 40px rgba(0, 0, 0, 0.3),
+    0 0 25px rgba(155, 92, 255, 0.06);
+}
+
+/* First letter / album-like visual */
+
+.songs li::before {
+  content: "♫";
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 43px;
+  height: 43px;
+
+  flex-shrink: 0;
+
+  margin-right: 14px;
+
+  border-radius: 13px;
+
+  font-size: 19px;
+
+  color: #d5baff;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(155, 92, 255, 0.24),
+      rgba(214, 108, 255, 0.08)
+    );
+
+  border: 1px solid rgba(155, 92, 255, 0.16);
+
+  box-shadow:
+    inset 0 0 20px rgba(155, 92, 255, 0.08),
+    0 5px 20px rgba(155, 92, 255, 0.08);
+
+  transition:
+    transform 0.35s ease,
+    box-shadow 0.35s ease;
+}
+
+.songs li:hover::before {
+  transform: rotate(-6deg) scale(1.06);
+
+  box-shadow:
+    0 0 20px rgba(155, 92, 255, 0.25);
+}
+
+/* Buttons inside songs */
+
+.songs button {
+  border: 0;
+  outline: none;
+
+  color: #aaaab6;
+  background: rgba(255, 255, 255, 0.04);
+
+  padding: 9px 12px;
+
+  border-radius: 10px;
+
+  font-family: inherit;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    color 0.25s ease,
+    background 0.25s ease,
+    transform 0.25s ease;
+}
+
+.songs button:hover {
+  color: #fff;
+
+  background:
+    rgba(155, 92, 255, 0.2);
+
+  transform: scale(1.06);
+}
+
+/* =========================================================
+   MOOD BUTTONS
+   ========================================================= */
+
+#moodBtns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+
+  margin-bottom: 28px;
+}
+
+#moodBtns button {
+  position: relative;
+
+  overflow: hidden;
+
+  padding: 13px 19px;
+
+  border-radius: 14px;
+
+  border: 1px solid rgba(255, 255, 255, 0.07);
+
+  background:
+    rgba(255, 255, 255, 0.035);
+
+  color: #c0c0cb;
+
+  font-family: inherit;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.3s cubic-bezier(.16, 1, .3, 1),
+    color 0.3s ease,
+    background 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+#moodBtns button::before {
+  content: "";
+
+  position: absolute;
+
+  width: 100px;
+  height: 100px;
+
+  left: var(--x, 50%);
+  top: var(--y, 50%);
+
+  transform: translate(-50%, -50%);
+
+  background: rgba(155, 92, 255, 0.3);
+
+  filter: blur(35px);
+
+  opacity: 0;
+
+  transition: opacity 0.3s ease;
+}
+
+#moodBtns button:hover {
+  color: #fff;
+
+  transform: translateY(-4px);
+
+  background:
+    rgba(155, 92, 255, 0.1);
+
+  box-shadow:
+    0 12px 30px rgba(155, 92, 255, 0.13);
+}
+
+#moodBtns button:hover::before {
+  opacity: 1;
+}
+
+/* =========================================================
+   QUIZ
+   ========================================================= */
+
+#quizBox {
+  padding: 35px;
+
+  border-radius: 24px;
+
+  border: 1px solid rgba(255, 255, 255, 0.07);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.055),
+      rgba(255, 255, 255, 0.018)
+    );
+
+  box-shadow: var(--shadow);
+
+  backdrop-filter: blur(18px);
+}
+
+/* Generic buttons inside quiz */
+
+#quizBox button {
+  border: 0;
+  outline: none;
+
+  padding: 13px 18px;
+
+  margin: 7px;
+
+  border-radius: 12px;
+
+  color: white;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(155, 92, 255, 0.8),
+      rgba(108, 77, 255, 0.8)
+    );
+
+  font-family: inherit;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 8px 25px rgba(108, 77, 255, 0.2);
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    filter 0.25s ease;
+}
+
+#quizBox button:hover {
+  transform: translateY(-3px) scale(1.02);
+
+  filter: brightness(1.1);
+
+  box-shadow:
+    0 14px 35px rgba(108, 77, 255, 0.3);
+}
+
+#quizBox button:active {
+  transform: scale(0.96);
+}
+
+/* =========================================================
+   VISUALIZER
+   ========================================================= */
+
+#viz {
+  text-align: center;
+}
+
+#cv {
+  display: block;
+
+  width: 100%;
+  max-width: 900px;
+  height: 320px;
+
+  margin: 30px auto 0;
+
+  border-radius: 25px;
+
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(155, 92, 255, 0.08),
+      rgba(0, 0, 0, 0.25)
+    );
+
+  border: 1px solid rgba(255, 255, 255, 0.06);
+
+  box-shadow:
+    0 20px 70px rgba(0, 0, 0, 0.4),
+    0 0 50px rgba(155, 92, 255, 0.08);
+}
+
+/* =========================================================
+   TIMELINE
+   ========================================================= */
+
+#tl {
+  list-style: none;
+
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 18px;
+
+  padding: 15px 0;
+}
+
+#tl::before {
+  content: "";
+
+  position: absolute;
+
+  left: 21px;
+  top: 0;
+  bottom: 0;
+
+  width: 2px;
+
+  background:
+    linear-gradient(
+      to bottom,
+      transparent,
+      rgba(155, 92, 255, 0.5),
+      rgba(214, 108, 255, 0.25),
+      transparent
+    );
+}
+
+#tl li {
+  position: relative;
+
+  margin-left: 45px;
+
+  padding: 22px 25px;
+
+  border-radius: 18px;
+
+  border: 1px solid rgba(255, 255, 255, 0.06);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.045),
+      rgba(255, 255, 255, 0.015)
+    );
+
+  backdrop-filter: blur(15px);
+
+  transition:
+    transform 0.35s cubic-bezier(.16, 1, .3, 1),
+    border-color 0.3s ease,
+    background 0.3s ease;
+}
+
+#tl li::before {
+  content: "";
+
+  position: absolute;
+
+  left: -32px;
+  top: 25px;
+
+  width: 12px;
+  height: 12px;
+
+  border-radius: 50%;
+
+  background: var(--accent);
+
+  border: 4px solid var(--bg);
+
+  box-shadow:
+    0 0 0 2px rgba(155, 92, 255, 0.3),
+    0 0 20px rgba(155, 92, 255, 0.5);
+}
+
+#tl li:hover {
+  transform: translateX(8px);
+
+  border-color: rgba(155, 92, 255, 0.2);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(155, 92, 255, 0.09),
+      rgba(255, 255, 255, 0.025)
+    );
+}
+
+/* =========================================================
+   MUSIC PLAYER
+   ========================================================= */
+
+#bar {
+  position: fixed;
+
+  z-index: 999;
+
+  left: 50%;
+  bottom: 18px;
+
+  transform: translateX(-50%);
+
+  width: min(1100px, calc(100% - 30px));
+
+  min-height: 82px;
+
+  display: grid;
+
+  grid-template-columns: 1fr auto 1fr auto;
+
+  align-items: center;
+
+  gap: 22px;
+
+  padding: 13px 18px;
+
+  border-radius: 23px;
+
+  border: 1px solid rgba(255, 255, 255, 0.09);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(18, 18, 25, 0.9),
+      rgba(11, 11, 16, 0.88)
+    );
+
+  backdrop-filter: blur(30px) saturate(160%);
+  -webkit-backdrop-filter: blur(30px) saturate(160%);
+
+  box-shadow:
+    0 20px 70px rgba(0, 0, 0, 0.6),
+    0 0 50px rgba(155, 92, 255, 0.07),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+/* Player glow */
+
+#bar::before {
+  content: "";
+
+  position: absolute;
+  inset: -1px;
+
+  border-radius: inherit;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(155, 92, 255, 0.2),
+      transparent
+    );
+
+  opacity: 0.5;
+
+  pointer-events: none;
+
+  mask-image: linear-gradient(
+    to bottom,
+    black,
+    transparent
+  );
+}
+
+/* Now playing */
+
+#now {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+#nowTitle {
+  overflow: hidden;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+#nowArtist {
+  color: var(--muted);
+
+  font-size: 12px;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Controls */
+
+#ctrl {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#ctrl button {
+  width: 39px;
+  height: 39px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 0;
+
+  border-radius: 50%;
+
+  color: #c5c5cf;
+
+  background: rgba(255, 255, 255, 0.05);
+
+  font-size: 15px;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.25s cubic-bezier(.16, 1, .3, 1),
+    background 0.25s ease,
+    color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+#ctrl button:hover {
+  color: white;
+
+  background:
+    rgba(155, 92, 255, 0.2);
+
+  transform: translateY(-3px);
+
+  box-shadow:
+    0 8px 25px rgba(155, 92, 255, 0.15);
+}
+
+#ctrl #play {
+  width: 48px;
+  height: 48px;
+
+  color: white;
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--accent),
+      var(--accent-3)
+    );
+
+  box-shadow:
+    0 8px 30px rgba(155, 92, 255, 0.3);
+}
+
+#ctrl #play:hover {
+  transform: translateY(-3px) scale(1.06);
+
+  box-shadow:
+    0 12px 40px rgba(155, 92, 255, 0.42);
+}
+
+/* =========================================================
+   RANGE SLIDERS
+   ========================================================= */
+
+input[type="range"] {
+  appearance: none;
+  -webkit-appearance: none;
+
+  height: 4px;
+
+  border-radius: 99px;
+
+  background:
+    rgba(255, 255, 255, 0.1);
+
+  cursor: pointer;
+}
+
+/* Seek */
+
+#seek {
+  width: 100%;
+}
+
+/* Volume */
+
+#vol {
+  width: 95px;
+}
+
+/* Webkit */
+
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 4px;
+
+  border-radius: 99px;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(155, 92, 255, 0.8),
+      rgba(255, 255, 255, 0.08)
+    );
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  appearance: none;
+
+  width: 13px;
+  height: 13px;
+
+  margin-top: -4.5px;
+
+  border-radius: 50%;
+
+  border: 2px solid white;
+
+  background: var(--accent);
+
+  box-shadow:
+    0 0 12px rgba(155, 92, 255, 0.6);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.35);
+
+  box-shadow:
+    0 0 20px rgba(155, 92, 255, 0.8);
+}
+
+/* Firefox */
+
+input[type="range"]::-moz-range-track {
+  height: 4px;
+
+  border-radius: 99px;
+
+  background:
+    rgba(255, 255, 255, 0.1);
+}
+
+input[type="range"]::-moz-range-progress {
+  height: 4px;
+
+  border-radius: 99px;
+
+  background:
+    var(--accent);
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 13px;
+  height: 13px;
+
+  border: 2px solid white;
+
+  border-radius: 50%;
+
+  background: var(--accent);
+}
+
+/* =========================================================
+   AUDIO ELEMENT
+   ========================================================= */
+
+#audio {
+  display: none;
+}
+
+/* =========================================================
+   SCROLLBAR
+   ========================================================= */
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #07070a;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 99px;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(155, 92, 255, 0.7),
+      rgba(108, 77, 255, 0.4)
+    );
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background:
+    linear-gradient(
+      180deg,
+      #a66bff,
+      #754fff
+    );
+}
+
+/* =========================================================
+   SELECTION
+   ========================================================= */
+
+::selection {
+  color: white;
+
+  background:
+    rgba(155, 92, 255, 0.45);
+}
+
+/* =========================================================
+   FOCUS
+   ========================================================= */
+
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid rgba(155, 92, 255, 0.8);
+  outline-offset: 3px;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 850px) {
+
+  #nav {
+    overflow-x: auto;
+    justify-content: flex-start;
+
+    scrollbar-width: none;
+  }
+
+  #nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  #nav h1 {
+    flex-shrink: 0;
+  }
+
+  #nav button {
+    flex-shrink: 0;
+  }
+
+  #bar {
+    grid-template-columns: 1fr auto;
+    gap: 10px;
+
+    padding: 12px 14px;
+  }
+
+  #seek {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  #vol {
+    display: none;
+  }
+}
+
+@media (max-width: 550px) {
+
+  #nav {
+    width: calc(100% - 20px);
+    margin-top: 10px;
+  }
+
+  main {
+    width: calc(100% - 24px);
+  }
+
+  .view h2 {
+    font-size: 30px;
+  }
+
+  #quizBox {
+    padding: 22px;
+  }
+
+  #tl li {
+    margin-left: 38px;
+    padding: 18px;
+  }
+
+  #tl::before {
+    left: 17px;
+  }
+
+  #tl li::before {
+    left: -27px;
+  }
+
+  #bar {
+    width: calc(100% - 16px);
+    bottom: 8px;
+
+    border-radius: 18px;
+  }
+
+  #ctrl button {
+    width: 35px;
+    height: 35px;
+  }
+
+  #ctrl #play {
+    width: 43px;
+    height: 43px;
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
