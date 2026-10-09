@@ -1,69 +1,1518 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Bassline</title>
-<link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="theme-color" content="#08080b">
+    <meta name="description" content="Rudy — a premium personal music player.">
+
+    <title>Rudy — Music</title>
+
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-<nav id="nav">
-  <h1>Bassline</h1>
-  <button data-view="library" class="on">Library</button>
-  <button data-view="moods">Moods</button>
-  <button data-view="playlist">My playlist</button>
-  <button data-view="quiz">Quiz</button>
-  <button data-view="viz">Visualizer</button>
-  <button data-view="timeline">Pop timeline</button>
-</nav>
 
-<main>
-  <section id="library" class="view on">
-    <h2>Library</h2>
-    <ul class="songs" id="libList"></ul>
-  </section>
+    <!-- =========================================================
+         BACKGROUND
+    ========================================================== -->
 
-  <section id="moods" class="view">
-    <h2>How are you feeling?</h2>
-    <div id="moodBtns"></div>
-    <ul class="songs" id="moodList"></ul>
-  </section>
+    <div class="background">
+        <div class="ambient ambient-one"></div>
+        <div class="ambient ambient-two"></div>
+        <div class="ambient ambient-three"></div>
 
-  <section id="playlist" class="view">
-    <h2>My playlist</h2>
-    <p id="emptyMsg">Nothing here yet. Press + next to a song in the Library to add it.</p>
-    <ul class="songs" id="plList"></ul>
-  </section>
+        <div class="grid-overlay"></div>
+        <div class="noise"></div>
 
-  <section id="quiz" class="view">
-    <h2>Music quiz</h2>
-    <div id="quizBox"></div>
-  </section>
+        <canvas id="particles"></canvas>
 
-  <section id="viz" class="view">
-    <h2>Visualizer</h2>
-    <p>Press play on any song and watch it move.</p>
-    <canvas id="cv" width="800" height="320"></canvas>
-  </section>
+        <div class="cursor-glow"></div>
+    </div>
 
-  <section id="timeline" class="view">
-    <h2>Pop music through the decades</h2>
-    <ol id="tl"></ol>
-  </section>
-</main>
 
-<footer id="bar">
-  <div id="now"><strong id="nowTitle">Pick a song</strong><span id="nowArtist"></span></div>
-  <div id="ctrl">
-    <button id="prev" aria-label="Previous song">⏮</button>
-    <button id="play" aria-label="Play">▶</button>
-    <button id="next" aria-label="Next song">⏭</button>
-  </div>
-  <input type="range" id="seek" min="0" max="100" value="0" aria-label="Song progress">
-  <input type="range" id="vol" min="0" max="1" step="0.05" value="0.8" aria-label="Volume">
-  <audio id="audio"></audio>
-</footer>
+    <!-- =========================================================
+         LOADING SCREEN
+    ========================================================== -->
 
-<script src="script.js"></script>
+    <div id="loadingScreen" class="loading-screen">
+
+        <div class="loader-logo">
+            <span>R</span>
+        </div>
+
+        <div class="loader-title">
+            RUDY
+        </div>
+
+        <div class="loader-line">
+            <div id="loaderProgress"></div>
+        </div>
+
+        <div class="loader-status">
+            INITIALIZING PLAYER
+        </div>
+
+    </div>
+
+
+    <!-- =========================================================
+         APP
+    ========================================================== -->
+
+    <div id="app" class="app">
+
+
+        <!-- =====================================================
+             SIDEBAR
+        ====================================================== -->
+
+        <aside class="sidebar">
+
+            <div class="brand">
+                <div class="brand-mark">R</div>
+
+                <div>
+                    <div class="brand-name">Rudy</div>
+                    <div class="brand-subtitle">Music player</div>
+                </div>
+            </div>
+
+
+            <nav class="navigation">
+
+                <div class="nav-label">
+                    MENU
+                </div>
+
+                <button class="nav-button active" data-page="home">
+                    <span class="nav-icon">⌂</span>
+                    <span>Home</span>
+                </button>
+
+                <button class="nav-button" data-page="library">
+                    <span class="nav-icon">♫</span>
+                    <span>Library</span>
+                </button>
+
+                <button class="nav-button" data-page="favorites">
+                    <span class="nav-icon">♡</span>
+                    <span>Favorites</span>
+                    <span id="favoriteCount" class="nav-count">0</span>
+                </button>
+
+                <button class="nav-button" data-page="playlist">
+                    <span class="nav-icon">☷</span>
+                    <span>My playlist</span>
+                </button>
+
+                <div class="nav-label second">
+                    EXPLORE
+                </div>
+
+                <button class="nav-button" data-page="visualizer">
+                    <span class="nav-icon">◌</span>
+                    <span>Visualizer</span>
+                </button>
+
+                <button class="nav-button" data-page="stats">
+                    <span class="nav-icon">↗</span>
+                    <span>Statistics</span>
+                </button>
+
+                <button class="nav-button" data-page="quiz">
+                    <span class="nav-icon">?</span>
+                    <span>Music quiz</span>
+                </button>
+
+                <button class="nav-button" data-page="timeline">
+                    <span class="nav-icon">◷</span>
+                    <span>Pop timeline</span>
+                </button>
+
+            </nav>
+
+
+            <div class="sidebar-bottom">
+
+                <button id="settingsButton" class="sidebar-settings">
+                    <span>⚙</span>
+                    <span>Settings</span>
+                </button>
+
+                <div class="keyboard-hint">
+                    <span>⌘</span>
+                    <span>K</span>
+                    <small>Search</small>
+                </div>
+
+            </div>
+
+        </aside>
+
+
+        <!-- =====================================================
+             MAIN
+        ====================================================== -->
+
+        <main class="main">
+
+
+            <!-- TOPBAR -->
+
+            <header class="topbar">
+
+                <div class="mobile-brand">
+                    <div class="brand-mark">R</div>
+                    <strong>Rudy</strong>
+                </div>
+
+                <div class="breadcrumbs">
+                    <span>RUDY</span>
+                    <b>/</b>
+                    <span id="currentPageName">HOME</span>
+                </div>
+
+                <div class="top-actions">
+
+                    <button id="searchButton" class="icon-button" title="Search">
+                        <span>⌕</span>
+                    </button>
+
+                    <button id="fullscreenButton" class="icon-button" title="Fullscreen">
+                        <span>⛶</span>
+                    </button>
+
+                    <button id="topSettings" class="icon-button" title="Settings">
+                        <span>⚙</span>
+                    </button>
+
+                </div>
+
+            </header>
+
+
+            <!-- =================================================
+                 PAGES
+            ================================================== -->
+
+            <div class="pages">
+
+
+                <!-- =================================================
+                     HOME
+                ================================================== -->
+
+                <section id="page-home" class="page active">
+
+                    <div class="hero">
+
+                        <div class="hero-copy">
+
+                            <div class="eyebrow">
+                                <span class="eyebrow-dot"></span>
+                                YOUR PERSONAL MUSIC SPACE
+                            </div>
+
+                            <h1>
+                                Music that<br>
+                                <span>feels different.</span>
+                            </h1>
+
+                            <p>
+                                A clean space for your music, playlists,
+                                visuals and everything you want to listen to.
+                            </p>
+
+                            <div class="hero-actions">
+
+                                <button id="heroPlay" class="primary-button">
+                                    <span>▶</span>
+                                    Play now
+                                </button>
+
+                                <button id="heroLibrary" class="secondary-button">
+                                    Explore library
+                                    <span>→</span>
+                                </button>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="hero-art-wrapper">
+
+                            <div class="hero-ring ring-one"></div>
+                            <div class="hero-ring ring-two"></div>
+
+                            <div id="heroAlbum" class="hero-album tilt-card">
+
+                                <div class="album-shine"></div>
+
+                                <div class="album-art">
+
+                                    <div class="album-letter">
+                                        C
+                                    </div>
+
+                                    <div class="album-art-bottom">
+                                        <span>COME AND</span>
+                                        <strong>SEE ME</strong>
+                                    </div>
+
+                                </div>
+
+                                <div class="playing-indicator">
+                                    <i></i>
+                                    <i></i>
+                                    <i></i>
+                                    <i></i>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- QUICK STATS -->
+
+                    <div class="section-heading">
+
+                        <div>
+                            <span class="section-kicker">OVERVIEW</span>
+                            <h2>Your space</h2>
+                        </div>
+
+                        <button class="text-button" data-page-link="stats">
+                            View statistics →
+                        </button>
+
+                    </div>
+
+
+                    <div class="overview-grid">
+
+                        <div class="overview-card">
+                            <div class="overview-icon">♫</div>
+                            <div>
+                                <span>Total songs</span>
+                                <strong id="totalSongs">01</strong>
+                            </div>
+                        </div>
+
+                        <div class="overview-card">
+                            <div class="overview-icon">♡</div>
+                            <div>
+                                <span>Favorites</span>
+                                <strong id="homeFavorites">00</strong>
+                            </div>
+                        </div>
+
+                        <div class="overview-card">
+                            <div class="overview-icon">◷</div>
+                            <div>
+                                <span>Listening time</span>
+                                <strong id="listeningTime">00:00</strong>
+                            </div>
+                        </div>
+
+                        <div class="overview-card">
+                            <div class="overview-icon">↗</div>
+                            <div>
+                                <span>Plays</span>
+                                <strong id="totalPlays">00</strong>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <!-- FEATURED -->
+
+                    <div class="section-heading">
+
+                        <div>
+                            <span class="section-kicker">FEATURED</span>
+                            <h2>Currently playing</h2>
+                        </div>
+
+                        <span class="live-status">
+                            <span></span>
+                            READY
+                        </span>
+
+                    </div>
+
+
+                    <div class="featured-card">
+
+                        <div class="featured-art">
+                            <div class="mini-album">
+                                <span>C</span>
+                            </div>
+                        </div>
+
+                        <div class="featured-info">
+
+                            <span class="track-label">SINGLE</span>
+
+                            <h3>Come and See Me</h3>
+
+                            <p>Rudy's music collection</p>
+
+                            <div class="featured-meta">
+                                <span>RUDY</span>
+                                <span>•</span>
+                                <span>NOW AVAILABLE</span>
+                            </div>
+
+                        </div>
+
+                        <div class="featured-action">
+
+                            <button id="featuredPlay" class="round-play">
+                                ▶
+                            </button>
+
+                            <button id="featuredFavorite" class="heart-button">
+                                ♡
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     LIBRARY
+                ================================================== -->
+
+                <section id="page-library" class="page">
+
+                    <div class="page-header">
+
+                        <div>
+                            <span class="section-kicker">COLLECTION</span>
+                            <h1>Library</h1>
+                            <p>Everything in your music collection.</p>
+                        </div>
+
+                        <div class="page-header-actions">
+
+                            <button id="librarySearch" class="secondary-button">
+                                ⌕ Search
+                            </button>
+
+                            <button id="sortButton" class="secondary-button">
+                                ↕ Sort
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <div id="librarySearchBox" class="search-box hidden">
+
+                        <span>⌕</span>
+
+                        <input
+                            id="librarySearchInput"
+                            type="text"
+                            placeholder="Search your library..."
+                            autocomplete="off"
+                        >
+
+                        <button id="clearSearch">×</button>
+
+                    </div>
+
+
+                    <div class="library-filter-row">
+
+                        <button class="filter active" data-filter="all">
+                            All
+                        </button>
+
+                        <button class="filter" data-filter="favorites">
+                            Favorites
+                        </button>
+
+                        <button class="filter" data-filter="recent">
+                            Recently played
+                        </button>
+
+                    </div>
+
+
+                    <div id="libraryGrid" class="music-grid"></div>
+
+
+                    <div id="libraryEmpty" class="empty-state hidden">
+
+                        <div class="empty-icon">♫</div>
+
+                        <h3>No songs found</h3>
+
+                        <p>
+                            Try another search or change your filter.
+                        </p>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     FAVORITES
+                ================================================== -->
+
+                <section id="page-favorites" class="page">
+
+                    <div class="page-header">
+
+                        <div>
+                            <span class="section-kicker">YOUR PICKS</span>
+                            <h1>Favorites</h1>
+                            <p>The songs you've marked as favorites.</p>
+                        </div>
+
+                    </div>
+
+                    <div id="favoritesGrid" class="music-grid"></div>
+
+                    <div id="favoritesEmpty" class="empty-state">
+
+                        <div class="empty-icon">♡</div>
+
+                        <h3>No favorites yet</h3>
+
+                        <p>
+                            Press the heart on a song to save it here.
+                        </p>
+
+                        <button class="secondary-button" data-page-link="library">
+                            Browse library
+                        </button>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     PLAYLIST
+                ================================================== -->
+
+                <section id="page-playlist" class="page">
+
+                    <div class="page-header">
+
+                        <div>
+                            <span class="section-kicker">YOUR MUSIC</span>
+                            <h1>My playlist</h1>
+                            <p>Your personal collection of tracks.</p>
+                        </div>
+
+                        <button id="playPlaylist" class="primary-button">
+                            ▶ Play playlist
+                        </button>
+
+                    </div>
+
+
+                    <div class="playlist-header-card">
+
+                        <div class="playlist-cover">
+                            <span>R</span>
+                        </div>
+
+                        <div class="playlist-info">
+
+                            <span>PLAYLIST</span>
+
+                            <h2>My favorites</h2>
+
+                            <p>
+                                Your selected tracks in one place.
+                            </p>
+
+                            <div>
+                                <strong id="playlistSongCount">0</strong>
+                                songs
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div id="playlistList" class="track-list"></div>
+
+
+                    <div id="playlistEmpty" class="empty-state">
+
+                        <div class="empty-icon">☷</div>
+
+                        <h3>Your playlist is empty</h3>
+
+                        <p>
+                            Add songs from the library to build your playlist.
+                        </p>
+
+                        <button class="secondary-button" data-page-link="library">
+                            Open library
+                        </button>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     VISUALIZER
+                ================================================== -->
+
+                <section id="page-visualizer" class="page">
+
+                    <div class="page-header">
+
+                        <div>
+                            <span class="section-kicker">AUDIO VISUALS</span>
+                            <h1>Visualizer</h1>
+                            <p>Watch the music react in real time.</p>
+                        </div>
+
+                        <div class="visualizer-controls">
+
+                            <button class="visual-mode active" data-mode="bars">
+                                Bars
+                            </button>
+
+                            <button class="visual-mode" data-mode="wave">
+                                Wave
+                            </button>
+
+                            <button class="visual-mode" data-mode="circle">
+                                Circle
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="visualizer-card">
+
+                        <canvas id="visualizerCanvas"></canvas>
+
+                        <div class="visualizer-center">
+
+                            <div class="visualizer-disc">
+                                C
+                            </div>
+
+                            <span id="visualizerStatus">
+                                READY TO PLAY
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="visualizer-bottom">
+
+                        <div class="visual-stat">
+                            <span>MODE</span>
+                            <strong id="visualModeText">BARS</strong>
+                        </div>
+
+                        <div class="visual-stat">
+                            <span>STATUS</span>
+                            <strong id="visualizerPlaying">PAUSED</strong>
+                        </div>
+
+                        <div class="visual-stat">
+                            <span>TRACK</span>
+                            <strong>COME AND SEE ME</strong>
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     STATS
+                ================================================== -->
+
+                <section id="page-stats" class="page">
+
+                    <div class="page-header">
+
+                        <div>
+                            <span class="section-kicker">YOUR ACTIVITY</span>
+                            <h1>Statistics</h1>
+                            <p>A look at your listening activity.</p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="stats-grid">
+
+                        <div class="big-stat">
+
+                            <span>Total plays</span>
+
+                            <strong id="statsPlays">0</strong>
+
+                            <div class="stat-line">
+                                <span></span>
+                            </div>
+
+                            <small>All-time plays</small>
+
+                        </div>
+
+
+                        <div class="big-stat">
+
+                            <span>Listening time</span>
+
+                            <strong id="statsTime">00:00</strong>
+
+                            <div class="stat-line">
+                                <span></span>
+                            </div>
+
+                            <small>Total time spent listening</small>
+
+                        </div>
+
+
+                        <div class="big-stat">
+
+                            <span>Favorites</span>
+
+                            <strong id="statsFavorites">0</strong>
+
+                            <div class="stat-line">
+                                <span></span>
+                            </div>
+
+                            <small>Songs you've saved</small>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="stats-main">
+
+                        <div class="chart-card">
+
+                            <div class="chart-header">
+
+                                <div>
+                                    <span class="section-kicker">ACTIVITY</span>
+                                    <h3>Listening activity</h3>
+                                </div>
+
+                                <span class="chart-period">
+                                    ALL TIME
+                                </span>
+
+                            </div>
+
+                            <div id="activityChart" class="activity-chart"></div>
+
+                        </div>
+
+
+                        <div class="top-track-card">
+
+                            <span class="section-kicker">TOP TRACK</span>
+
+                            <div class="top-track-art">
+                                C
+                            </div>
+
+                            <h3>Come and See Me</h3>
+
+                            <p>Most played track</p>
+
+                            <strong id="topTrackPlays">0 plays</strong>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     QUIZ
+                ================================================== -->
+
+                <section id="page-quiz" class="page">
+
+                    <div class="quiz-wrapper">
+
+                        <div class="quiz-intro">
+
+                            <span class="section-kicker">TEST YOURSELF</span>
+
+                            <h1>Music quiz</h1>
+
+                            <p>
+                                How much do you know about music?
+                            </p>
+
+                        </div>
+
+
+                        <div id="quizBox" class="quiz-box">
+
+                            <div class="quiz-progress">
+
+                                <span id="quizProgressText">
+                                    QUESTION 1 / 5
+                                </span>
+
+                                <div>
+                                    <span id="quizProgressBar"></span>
+                                </div>
+
+                            </div>
+
+                            <h2 id="quizQuestion">
+                                Which instrument has 88 keys?
+                            </h2>
+
+                            <div id="quizAnswers" class="quiz-answers"></div>
+
+                            <div class="quiz-footer">
+
+                                <span id="quizScore">
+                                    SCORE 0
+                                </span>
+
+                                <button id="nextQuestion" class="primary-button hidden">
+                                    Next →
+                                </button>
+
+                            </div>
+
+                        </div>
+
+
+                        <div id="quizResult" class="quiz-result hidden">
+
+                            <div class="result-icon">✓</div>
+
+                            <span>QUIZ COMPLETE</span>
+
+                            <h2 id="finalScore">0 / 5</h2>
+
+                            <p id="resultText">
+                                Nice work.
+                            </p>
+
+                            <button id="restartQuiz" class="primary-button">
+                                Play again
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- =================================================
+                     TIMELINE
+                ================================================== -->
+
+                <section id="page-timeline" class="page">
+
+                    <div class="page-header">
+
+                        <div>
+                            <span class="section-kicker">MUSIC HISTORY</span>
+                            <h1>Pop timeline</h1>
+                            <p>A quick trip through modern pop music.</p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="timeline">
+
+                        <div class="timeline-item">
+
+                            <div class="timeline-year">
+                                1950s
+                            </div>
+
+                            <div class="timeline-dot"></div>
+
+                            <div class="timeline-content">
+
+                                <span>THE BEGINNING</span>
+
+                                <h3>Rock & Roll</h3>
+
+                                <p>
+                                    Rock & Roll became one of the defining
+                                    sounds of the decade.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="timeline-item">
+
+                            <div class="timeline-year">
+                                1960s
+                            </div>
+
+                            <div class="timeline-dot"></div>
+
+                            <div class="timeline-content">
+
+                                <span>CHANGE</span>
+
+                                <h3>British Invasion</h3>
+
+                                <p>
+                                    British artists became huge worldwide
+                                    and changed popular music.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="timeline-item">
+
+                            <div class="timeline-year">
+                                1970s
+                            </div>
+
+                            <div class="timeline-dot"></div>
+
+                            <div class="timeline-content">
+
+                                <span>NEW SOUNDS</span>
+
+                                <h3>Disco & Funk</h3>
+
+                                <p>
+                                    Dance music, funk and disco took over
+                                    clubs and radio.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="timeline-item">
+
+                            <div class="timeline-year">
+                                1980s
+                            </div>
+
+                            <div class="timeline-dot"></div>
+
+                            <div class="timeline-content">
+
+                                <span>POP EXPLOSION</span>
+
+                                <h3>MTV Generation</h3>
+
+                                <p>
+                                    Music videos became a massive part of
+                                    how people experienced music.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="timeline-item">
+
+                            <div class="timeline-year">
+                                1990s
+                            </div>
+
+                            <div class="timeline-dot"></div>
+
+                            <div class="timeline-content">
+
+                                <span>GLOBAL</span>
+
+                                <h3>Pop, Hip-Hop & R&B</h3>
+
+                                <p>
+                                    Hip-hop and R&B became major forces
+                                    in mainstream music.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="timeline-item">
+
+                            <div class="timeline-year">
+                                2000s
+                            </div>
+
+                            <div class="timeline-dot"></div>
+
+                            <div class="timeline-content">
+
+                                <span>DIGITAL</span>
+
+                                <h3>The MP3 Era</h3>
+
+                                <p>
+                                    Digital music completely changed
+                                    how people bought and listened to songs.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="timeline-item">
+
+                            <div class="timeline-year">
+                                2010s
+                            </div>
+
+                            <div class="timeline-dot"></div>
+
+                            <div class="timeline-content">
+
+                                <span>STREAMING</span>
+
+                                <h3>Streaming Takes Over</h3>
+
+                                <p>
+                                    Music streaming became the normal way
+                                    people discovered and listened to music.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="timeline-item">
+
+                            <div class="timeline-year">
+                                2020s
+                            </div>
+
+                            <div class="timeline-dot"></div>
+
+                            <div class="timeline-content">
+
+                                <span>NOW</span>
+
+                                <h3>Music Everywhere</h3>
+
+                                <p>
+                                    Short-form video, streaming and
+                                    algorithmic discovery shape music culture.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+            </div>
+
+        </main>
+
+
+        <!-- =====================================================
+             MOBILE NAV
+        ====================================================== -->
+
+        <nav class="mobile-nav">
+
+            <button class="mobile-nav-button active" data-page="home">
+                <span>⌂</span>
+                Home
+            </button>
+
+            <button class="mobile-nav-button" data-page="library">
+                <span>♫</span>
+                Library
+            </button>
+
+            <button class="mobile-nav-button mobile-play-button" id="mobilePlay">
+                <span>▶</span>
+            </button>
+
+            <button class="mobile-nav-button" data-page="favorites">
+                <span>♡</span>
+                Favorites
+            </button>
+
+            <button class="mobile-nav-button" data-page="playlist">
+                <span>☷</span>
+                Playlist
+            </button>
+
+        </nav>
+
+
+        <!-- =====================================================
+             BOTTOM PLAYER
+        ====================================================== -->
+
+        <footer id="player" class="player">
+
+            <div class="player-track">
+
+                <div id="playerArtwork" class="player-artwork">
+                    C
+                </div>
+
+                <div class="player-track-info">
+
+                    <strong id="playerTitle">
+                        Come and See Me
+                    </strong>
+
+                    <span id="playerArtist">
+                        Rudy
+                    </span>
+
+                </div>
+
+                <button id="playerFavorite" class="player-heart">
+                    ♡
+                </button>
+
+            </div>
+
+
+            <div class="player-main">
+
+                <div class="player-buttons">
+
+                    <button id="shuffleButton" class="player-control">
+                        ⤨
+                    </button>
+
+                    <button id="previousButton" class="player-control">
+                        ⏮
+                    </button>
+
+                    <button id="playButton" class="play-control">
+                        ▶
+                    </button>
+
+                    <button id="nextButton" class="player-control">
+                        ⏭
+                    </button>
+
+                    <button id="repeatButton" class="player-control">
+                        ↻
+                    </button>
+
+                </div>
+
+                <div class="progress-container">
+
+                    <span id="currentTime">
+                        0:00
+                    </span>
+
+                    <input
+                        type="range"
+                        id="progress"
+                        min="0"
+                        max="100"
+                        value="0"
+                    >
+
+                    <span id="duration">
+                        0:00
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="player-extra">
+
+                <button id="queueButton" class="player-extra-button">
+                    ☷
+                </button>
+
+                <button id="playerFullscreen" class="player-extra-button">
+                    ⛶
+                </button>
+
+                <span class="volume-icon">
+                    ◖
+                </span>
+
+                <input
+                    type="range"
+                    id="volume"
+                    min="0"
+                    max="1"
+                    step="0.01"
+                    value="0.8"
+                >
+
+            </div>
+
+        </footer>
+
+    </div>
+
+
+    <!-- =========================================================
+         FULLSCREEN NOW PLAYING
+    ========================================================== -->
+
+    <div id="nowPlaying" class="now-playing">
+
+        <button id="closeNowPlaying" class="close-now-playing">
+            ×
+        </button>
+
+        <div class="now-playing-bg"></div>
+
+        <div class="now-playing-content">
+
+            <div class="now-playing-art-wrap">
+
+                <div class="now-playing-art tilt-card">
+                    <div class="album-letter">
+                        C
+                    </div>
+
+                    <div class="album-art-bottom">
+                        <span>COME AND</span>
+                        <strong>SEE ME</strong>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="now-playing-info">
+
+                <span>NOW PLAYING</span>
+
+                <h1>Come and See Me</h1>
+
+                <p>Rudy</p>
+
+                <div class="now-playing-progress">
+
+                    <span id="fullscreenCurrent">
+                        0:00
+                    </span>
+
+                    <input
+                        type="range"
+                        id="fullscreenProgress"
+                        min="0"
+                        max="100"
+                        value="0"
+                    >
+
+                    <span id="fullscreenDuration">
+                        0:00
+                    </span>
+
+                </div>
+
+
+                <div class="fullscreen-controls">
+
+                    <button id="fullscreenShuffle">
+                        ⤨
+                    </button>
+
+                    <button id="fullscreenPrevious">
+                        ⏮
+                    </button>
+
+                    <button id="fullscreenPlay" class="fullscreen-play">
+                        ▶
+                    </button>
+
+                    <button id="fullscreenNext">
+                        ⏭
+                    </button>
+
+                    <button id="fullscreenRepeat">
+                        ↻
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================================
+         SEARCH MODAL
+    ========================================================== -->
+
+    <div id="searchModal" class="modal">
+
+        <div class="modal-backdrop"></div>
+
+        <div class="search-modal-content">
+
+            <div class="modal-top">
+
+                <span>SEARCH</span>
+
+                <button class="modal-close" data-close="searchModal">
+                    ×
+                </button>
+
+            </div>
+
+            <div class="big-search">
+
+                <span>⌕</span>
+
+                <input
+                    id="globalSearch"
+                    type="text"
+                    placeholder="Search music..."
+                    autocomplete="off"
+                >
+
+                <kbd>ESC</kbd>
+
+            </div>
+
+            <div id="searchResults" class="search-results">
+
+                <div class="search-placeholder">
+                    Start typing to search your library.
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================================
+         SETTINGS
+    ========================================================== -->
+
+    <div id="settingsPanel" class="settings-panel">
+
+        <div class="settings-backdrop"></div>
+
+        <div class="settings-content">
+
+            <div class="settings-header">
+
+                <div>
+                    <span class="section-kicker">CUSTOMIZE</span>
+                    <h2>Settings</h2>
+                </div>
+
+                <button id="closeSettings" class="modal-close">
+                    ×
+                </button>
+
+            </div>
+
+
+            <div class="settings-section">
+
+                <span class="settings-label">
+                    ACCENT
+                </span>
+
+                <div class="accent-options">
+
+                    <button class="accent active" data-accent="purple"></button>
+                    <button class="accent blue" data-accent="blue"></button>
+                    <button class="accent red" data-accent="red"></button>
+                    <button class="accent green" data-accent="green"></button>
+
+                </div>
+
+            </div>
+
+
+            <div class="settings-section">
+
+                <span class="settings-label">
+                    APPEARANCE
+                </span>
+
+                <div class="setting-row">
+
+                    <div>
+                        <strong>Ambient lighting</strong>
+                        <small>Animated background glow</small>
+                    </div>
+
+                    <label class="switch">
+                        <input id="ambientToggle" type="checkbox" checked>
+                        <span></span>
+                    </label>
+
+                </div>
+
+
+                <div class="setting-row">
+
+                    <div>
+                        <strong>Particles</strong>
+                        <small>Floating background particles</small>
+                    </div>
+
+                    <label class="switch">
+                        <input id="particleToggle" type="checkbox" checked>
+                        <span></span>
+                    </label>
+
+                </div>
+
+
+                <div class="setting-row">
+
+                    <div>
+                        <strong>Reduced motion</strong>
+                        <small>Use fewer animations</small>
+                    </div>
+
+                    <label class="switch">
+                        <input id="motionToggle" type="checkbox">
+                        <span></span>
+                    </label>
+
+                </div>
+
+            </div>
+
+
+            <div class="settings-section">
+
+                <span class="settings-label">
+                    KEYBOARD
+                </span>
+
+                <div class="shortcut-list">
+
+                    <div>
+                        <kbd>SPACE</kbd>
+                        <span>Play / pause</span>
+                    </div>
+
+                    <div>
+                        <kbd>←</kbd>
+                        <span>Previous</span>
+                    </div>
+
+                    <div>
+                        <kbd>→</kbd>
+                        <span>Next</span>
+                    </div>
+
+                    <div>
+                        <kbd>F</kbd>
+                        <span>Fullscreen player</span>
+                    </div>
+
+                    <div>
+                        <kbd>CTRL K</kbd>
+                        <span>Search</span>
+                    </div>
+
+                    <div>
+                        <kbd>M</kbd>
+                        <span>Mute</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <button id="resetData" class="danger-button">
+                Reset saved data
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================================
+         TOAST
+    ========================================================== -->
+
+    <div id="toast" class="toast">
+
+        <div class="toast-icon">
+            ✓
+        </div>
+
+        <div>
+            <strong id="toastTitle">Done</strong>
+            <span id="toastMessage">Action completed.</span>
+        </div>
+
+    </div>
+
+
+    <!-- =========================================================
+         AUDIO
+    ========================================================== -->
+
+    <audio id="audio" preload="metadata">
+        <source src="come-and-see-me.mp3" type="audio/mpeg">
+    </audio>
+
+
+    <script src="script.js"></script>
+
 </body>
 </html>
